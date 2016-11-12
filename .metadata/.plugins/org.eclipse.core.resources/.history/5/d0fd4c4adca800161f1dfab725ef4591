@@ -1,0 +1,133 @@
+package Municion;
+
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import General.*;
+import Unidades.*;
+import InteligenciaArtificial.InteligenciaExplo;
+
+public abstract class Bala extends GameObject 
+{
+	protected int ancho,largo;
+	protected Tanque miTanque;
+	protected int direccion;
+	protected boolean vive;
+	protected Icon [] ImagenesExplo;
+	protected int anchoExplo;
+	protected int largoExplo;
+	protected InteligenciaExplo ie;
+	
+	public Bala(int x, int y, int n,Tanque t, int dir)
+	{
+		super(x,y,n);
+		miTanque = t;
+		direccion = dir;
+		vive = true;
+		ancho=12;
+		largo=12;
+		anchoExplo = 136;
+		largoExplo = 107;
+		ie = new InteligenciaExplo();
+//		ImagenesExplo = new Icon[8];
+//		ImagenesExplo[0] = new ImageIcon(this.getClass().getResource("/Recursos/blast1.gif"));
+//		ImagenesExplo[1] = new ImageIcon(this.getClass().getResource("/Recursos/blast2.gif"));
+//		ImagenesExplo[2] = new ImageIcon(this.getClass().getResource("/Recursos/blast3.gif"));
+//		ImagenesExplo[3] = new ImageIcon(this.getClass().getResource("/Recursos/blast4.gif"));
+//		ImagenesExplo[4] = new ImageIcon(this.getClass().getResource("/Recursos/blast5.gif"));
+//		ImagenesExplo[5] = new ImageIcon(this.getClass().getResource("/Recursos/blast6.gif"));
+//		ImagenesExplo[6] = new ImageIcon(this.getClass().getResource("/Recursos/blast7.gif"));
+//		ImagenesExplo[7] = new ImageIcon(this.getClass().getResource("/Recursos/blast8.gif"));	
+	}
+	
+	protected void cambiarGrafico(int dir)
+	{
+		if(this.grafico != null)
+		{
+			this.grafico.setIcon(this.ColeccionDeImagenes[dir]);
+			this.grafico.setBounds(this.pos.x, this.pos.y, ancho, largo);
+		}
+	}
+	
+	public JLabel getGrafico()
+	{
+		if(this.grafico == null)
+		{
+			this.grafico = new JLabel(ColeccionDeImagenes[0]);
+			this.grafico.setBounds(this.pos.x, this.pos.y, ancho, largo);
+		}		
+		return this.grafico;
+	}
+	
+	public Rectangle getRect()
+	{
+		return new Rectangle(pos.x, pos.y, this.ancho, this.largo);
+	}
+	
+	public boolean vive()
+	{
+		return vive;
+	}
+	
+	public void mover()
+	{	
+		switch (direccion) 
+		{
+			case 0 : //Arriba
+				pos.setLocation(pos.x, pos.y - (14 + miTanque.getVelocidadDis()));
+				break;
+			case 1 : //Abajo
+				pos.setLocation(pos.x, pos.y + (14 + miTanque.getVelocidadDis()));
+				break;
+			case 2 : //Izquierda
+				pos.setLocation(pos.x - (14 + miTanque.getVelocidadDis()), pos.y);
+				break;
+			case 3 : //Derecha
+				pos.setLocation(pos.x + (14 + miTanque.getVelocidadDis()), pos.y);
+				break;
+		}
+		cambiarGrafico(direccion);
+	}
+	
+	public Tanque getTanque()
+	{
+		return miTanque;
+	}
+	
+	public void setTanque (Tanque v)
+	{
+		miTanque=v;
+	}
+	
+	public void explotar(Point p)
+	{
+		JLabel grafico = new JLabel();
+		switch (direccion) 
+		{
+			case 0 :
+				grafico.setBounds(p.x - 15,p.y + 4, 60, 60);
+				break;
+			case 1 :
+				grafico.setBounds(p.x - 15,p.y - 50, 60, 60);
+				break;
+			case 2 :
+				grafico.setBounds(p.x + 8 ,p.y - 25, 60, 60);
+				break;
+			case 3 :
+				grafico.setBounds(p.x - 35 ,p.y - 30, 60, 60);
+				break;
+		}
+		for (int i = 0; i < 8; i++)
+		{
+			grafico.setIcon(new ImageIcon(this.getClass().getResource("/Recursos/Explo"+i+".gif")));
+			
+			//grafico.setBounds(p.x,p.y - 30, 60, 60);
+			miTanque.getJuego().getGui().getPanel1().add(grafico);
+			ie.start();
+			ie = new InteligenciaExplo();			
+		}
+		//miTanque.getJuego().getGui().remove(grafico);
+	}
+}

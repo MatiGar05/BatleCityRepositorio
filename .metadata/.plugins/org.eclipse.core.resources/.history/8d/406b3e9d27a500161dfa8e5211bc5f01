@@ -1,0 +1,18 @@
+package Fabricas;
+
+import PowerUps.*;
+
+public abstract class AbstractFactoryPowerUps 
+{
+	public abstract PowerUp CrearCasco();
+	
+	public abstract PowerUp CrearEstrella();
+	
+	public abstract PowerUp CrearGranada();
+	
+	public abstract PowerUp CrearPala();
+	
+	public abstract PowerUp CrearTanqueP();
+	
+	public abstract PowerUp CrearTimer();
+}

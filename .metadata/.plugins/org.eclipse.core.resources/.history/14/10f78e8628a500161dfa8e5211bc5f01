@@ -1,0 +1,24 @@
+package Fabricas;
+
+import java.awt.Point;
+import java.util.Random;
+
+public class FabricaPowerUp {
+
+	private Point [] posibilidades;
+	private Random r;
+	
+	public FabricaPowerUp()
+	{
+		posibilidades = new Point[5];
+		posibilidades[0]= new Point(100,400);
+		posibilidades[1]= new Point(460,350);
+		posibilidades[2]= new Point(820,400);
+		posibilidades[3]= new Point(402,220);
+		posibilidades[4]= new Point(522,220);
+		r = new Random();
+	}
+	
+	
+	
+}

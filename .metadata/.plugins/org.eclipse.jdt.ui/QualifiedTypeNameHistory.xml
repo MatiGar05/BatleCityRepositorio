@@ -1,2 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="InteligenciaArtificial.InteligenciaBala"/>
+<fullyQualifiedTypeName name="Unidades.Jugador"/>
+<fullyQualifiedTypeName name="General.GameObject"/>
+<fullyQualifiedTypeName name="TDALista.Position"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="InteligenciaArtificial.InteligenciaPowerUp"/>
+<fullyQualifiedTypeName name="Game.Juego"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="Fabricas.FabricaEnemigosNivelUno"/>
+<fullyQualifiedTypeName name="Fabricas.AbstractFactoryEnemigos"/>
+<fullyQualifiedTypeName name="PowerUps.PowerUp"/>
+<fullyQualifiedTypeName name="Fabricas.FabricaEnemigoNivelUno"/>
+<fullyQualifiedTypeName name="InteligenciaArtificial.CreadorEnemigos"/>
+<fullyQualifiedTypeName name="java.awt.event.ActionListener"/>
+<fullyQualifiedTypeName name="java.awt.event.ActionEvent"/>
+<fullyQualifiedTypeName name="java.applet.AudioClip"/>
+<fullyQualifiedTypeName name="java.applet.Applet"/>
+<fullyQualifiedTypeName name="javax.swing.ImageIcon"/>
+<fullyQualifiedTypeName name="java.util.Timer"/>
+</qualifiedTypeNameHistroy>

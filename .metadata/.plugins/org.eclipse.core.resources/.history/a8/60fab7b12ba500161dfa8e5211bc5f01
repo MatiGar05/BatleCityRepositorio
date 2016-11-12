@@ -1,0 +1,27 @@
+package InteligenciaArtificial;
+
+import Fabricas.AbstractFactoryEnemigo;
+import Fabricas.FabricaEnemigoNivelUno;
+import Game.Juego;
+
+public class CreadorEnemigos extends Thread {
+	
+	private AbstractFactoryEnemigo fabricaEnemigo;
+	private Juego miJuego;
+	private boolean condicion;
+	
+	public CreadorEnemigos(Juego j){
+		fabricaEnemigo=new FabricaEnemigoNivelUno();
+		condicion =true;
+		miJuego=j;
+	}
+	
+
+	public void run() {
+		while(condicion)
+		{
+			try {
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {}}
+}
+	}

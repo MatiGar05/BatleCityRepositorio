@@ -1,0 +1,70 @@
+package Municion;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import InteligenciaArtificial.*;
+import Unidades.*;
+import Visitantes.*;
+
+public class BalaEnemigo extends Bala
+{	
+	
+	protected InteligenciaBalaEnemigo ibe;
+	protected Visitor colider;
+	
+	public BalaEnemigo(int x, int y, int n, Tanque t, int dir)
+	{
+		super(x,y,n,t,dir);
+		ColeccionDeImagenes[0]=  new ImageIcon(this.getClass().getResource("/Recursos/BalaU.gif"));
+		ColeccionDeImagenes[1]=  new ImageIcon(this.getClass().getResource("/Recursos/BalaD.gif"));
+		ColeccionDeImagenes[2]=  new ImageIcon(this.getClass().getResource("/Recursos/BalaL.gif"));
+		ColeccionDeImagenes[3]=  new ImageIcon(this.getClass().getResource("/Recursos/BalaR.gif"));	
+		ibe= new InteligenciaBalaEnemigo(miTanque.getJuego(),this, miTanque);
+		colider = new ColisionadorBalasEnemigo(this);
+	}
+	
+	public void setImagen(Icon i , int pos)
+	{
+		ColeccionDeImagenes[pos] = i;
+	}
+	
+	public void mover(int dir)
+	{
+		
+	}
+	
+	public void setInteligenciaArtificialEnemigo(InteligenciaBalaEnemigo i)
+	{
+		ibe=i;
+	}
+	
+	public InteligenciaBalaEnemigo getHiloEnemigo()
+	{
+		return ibe;
+	}
+	
+	public void destruirBalaEnemigo()
+	{
+		try
+		{
+			miTanque.getJuego().borrarBalaEnemigo(this, miTanque);
+			miTanque.setDispAct(miTanque.getDispAct() - 1);
+			this.getTanque().getJuego().getGui().repaint();
+			ibe.cambiarVariable();
+			vive = false;
+		}
+		catch(IndexOutOfBoundsException exc)
+		{
+		}
+	}
+	
+	public Visitor getColider()
+	{
+		return colider;
+	}
+	
+	public boolean colisionarCon(Visitor v)
+	{
+		return v.ColisionarBalaEnemigo(this);
+	}
+}

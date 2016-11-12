@@ -1,0 +1,45 @@
+package Fabricas;
+
+import Unidades.*;
+
+import java.awt.Point;
+import java.util.Random;
+
+public class FabricaEnemigoBasico extends AbstractFactoryEnemigos 
+{
+
+	protected Point [] posibilidades;
+	protected Random r;
+	
+	public FabricaEnemigoBasico()
+	{
+		posibilidades = new Point[4];
+		posibilidades[0]= new Point(100,100);
+		posibilidades[1]= new Point(300,100);
+		posibilidades[2]= new Point(500,100);
+		posibilidades[3]= new Point(700,100);
+		r = new Random();
+	}
+	
+	public Enemigo CrearBasico()
+	{
+		int i = r.nextInt(4);
+		Point p = posibilidades[i];
+		return new TanqueBasico(p.x,p.y,r.nextInt(4));
+	}
+	
+	public Enemigo CrearBlindado()
+	{
+		return null;
+	}
+	
+	public Enemigo CrearPoder()
+	{
+		return null;
+	}
+	
+	public Enemigo CrearRapido()
+	{
+		return null;
+	}	
+}

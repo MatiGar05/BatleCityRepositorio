@@ -1,0 +1,23 @@
+package InteligenciaArtificial;
+
+import java.applet.*;
+
+public class ReproductorSonido extends Thread {
+	
+	AudioClip sonido;
+	
+	public ReproductorSonido() {
+		sonido = java.applet.Applet.newAudioClip(getClass().getResource("Recursos/Game_of_Thrones_8-bit.wav"));
+	}
+	
+	public void run() {
+		while (true) {
+			try {
+				Thread.sleep(122000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			sonido.play();
+		}
+	}
+}

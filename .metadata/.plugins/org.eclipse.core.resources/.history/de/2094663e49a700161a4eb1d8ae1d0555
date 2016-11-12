@@ -1,0 +1,72 @@
+package Unidades;
+
+import General.GameObject;
+import Municion.Bala;
+import Game.Juego;
+
+public abstract class Tanque extends GameObject 
+{	
+	protected int GolpesResis;
+	protected int VelocidadDis;
+	protected int direccion;
+	protected Juego mij;
+	protected int dispAct;
+	
+	public Tanque(int golpes, int VD, int x,int y ,int n)
+	{
+		super(x,y,n);
+		GolpesResis=golpes;
+		VelocidadDis=VD;
+		direccion = 0;
+		dispAct = 0;
+	}
+	
+	public int getDispAct()
+	{
+		return dispAct;
+	}
+	
+	public void setDispAct(int dis)
+	{
+		dispAct = dis;
+	}
+	
+	public abstract void mover(int dir);	
+	
+	public int getDireccion()
+	{
+		return direccion;
+	}	
+	
+	public int getVelocidadDis()
+	{
+		return VelocidadDis;
+	}
+	
+	public void setGolpesResis(int g)
+	{
+		GolpesResis=g;
+	}	
+	
+	public int getGolpesResis()
+	{
+		return GolpesResis;
+	}
+	
+	public void setVelocidadDis(int g)
+	{
+		VelocidadDis=g;
+	}
+	
+	public abstract Bala disparar();
+	
+	public Juego getJuego()
+	{
+		return mij;
+	}
+	
+	public void setJuego(Juego j)
+	{ 
+		mij = j; 
+	}
+}

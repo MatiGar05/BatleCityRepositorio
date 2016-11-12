@@ -1,0 +1,16 @@
+package Fabricas;
+
+import Unidades.Enemigo;
+
+public abstract class AbstractFactoryEnemigos 
+{
+
+	public abstract Enemigo CrearBasico();
+	
+	public abstract Enemigo CrearBlindado();
+	
+	public abstract Enemigo CrearPoder();
+	
+	public abstract Enemigo CrearRapido();
+}
+

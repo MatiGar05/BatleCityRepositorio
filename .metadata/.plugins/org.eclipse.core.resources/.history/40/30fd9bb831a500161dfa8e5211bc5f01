@@ -1,0 +1,66 @@
+package InteligenciaArtificial;
+
+import Fabricas.AbstractFactoryEnemigo;
+import Fabricas.FabricaEnemigoNivelUno;
+import Game.Juego;
+import java.util.Random;
+import Unidades.Enemigo;
+
+public class CreadorEnemigos extends Thread {
+	
+	private AbstractFactoryEnemigo fabricaEnemigo;
+	private Juego miJuego;
+	private boolean condicion;
+	private int cantidad;
+	
+	public CreadorEnemigos(Juego j){
+		fabricaEnemigo=new FabricaEnemigoNivelUno();
+		condicion =true;
+		miJuego=j;
+		cantidad = miJuego.getMalos().size();
+	}
+	
+
+	public void actualizarCantidad(){
+		cantidad = miJuego.getMalos().size(); 
+	}
+	
+	public Enemigo getEnemigo(){
+		Random r = new Random();
+		int i =r.nextInt(4);
+		Enemigo res=null ; 
+		switch (i){
+		case 0:
+			res=fabricaEnemigo.CrearEnemigo1();
+			break;
+		case 1:
+			res=fabricaEnemigo.CrearEnemigo2();
+			break;
+		case 2:
+			res=fabricaEnemigo.CrearEnemigo3();
+			break;
+		case 3:
+			res=fabricaEnemigo.CrearEnemigo4();
+			break;
+		}
+		return res;
+	}
+	
+	public void run() {
+		while(condicion)
+		{
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {}
+			if (cantidad <= 3){
+				miJuego.agregarMalos(getEnemigo());
+				actualizarCantidad();
+				System.out.printl("Creo malo re loco");
+			}
+		}
+	}
+	
+	public void interrumpir(){
+		condicion=false;
+	}
+}

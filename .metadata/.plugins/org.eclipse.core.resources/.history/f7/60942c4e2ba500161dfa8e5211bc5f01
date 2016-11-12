@@ -1,0 +1,520 @@
+package Game;
+
+import java.awt.Point;
+import java.util.Iterator;
+
+//import Fabricas.*;
+import TDALista.*;
+import java.util.Random;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import Unidades.*;
+import Obstaculos.Obstaculo;
+import General.GameObject;
+import Municion.*;
+import PowerUps.*;
+import Nivel.*;
+import InteligenciaArtificial.*;
+import Fabricas.*;
+
+public class Juego {
+	private Jugador jugador;
+	private PositionList<GameObject> todo;
+	private PositionList<Obstaculo> obs;
+	private PositionList<Enemigo> malos;
+	private PositionList<Obstaculo> borde;
+	private PositionList<Bala> balasJugador;
+	private PositionList<Bala> balasEnemigas;
+	private PositionList<Obstaculo> base;
+	private AbstractFactoryEnemigo fabricaEnemigo;
+	private AbstractFactoryPowerUp fabricaPower;
+	
+	private boolean pulsado;
+	private int puntaje;
+	private int muertes;
+	private int enemigosAct;
+	private int i = 0;
+	private GUI gui;
+	private int dir = 1;
+	private Random r;
+	private int probabilidadDisparo = 2;
+	private PositionList<PowerUp> powers;
+	private Point [] posibilidades;
+	
+	public Juego(GUI gui, PositionList<Obstaculo> listaObs, PositionList<Enemigo> listaEne, PositionList<GameObject> listaTodo, PositionList<Obstaculo> listaBorde,PositionList<Obstaculo>base)
+	{
+//		posibilidades = new Point[5];
+//		posibilidades[0]= new Point(100,400);
+//		posibilidades[1]= new Point(460,350);
+//		posibilidades[2]= new Point(820,400);
+//		posibilidades[3]= new Point(402,220);
+//		posibilidades[4]= new Point(522,220);
+		fabricaEnemigo = new FabricaEnemigoNivelUno(); 
+		fabricaPower = new FabricaPowerUp();
+		this.setTodo(listaTodo);
+		this.setMalos(listaEne);
+		this.setObs(listaObs);
+		this.setBorde(listaBorde);
+		this.setBase(base);
+		balasJugador = new ListaDoblementeEnlazada<Bala>();
+		balasEnemigas = new ListaDoblementeEnlazada<Bala>();
+		r = new Random();
+		puntaje = 0;
+		muertes = 0;
+		enemigosAct = 0;
+		pulsado = false;
+		this.gui = gui;
+		jugador = new Jugador(1,5,0,335,595,4,4,1);
+		jugador.setJuego(this);
+		powers = new ListaDoblementeEnlazada<PowerUp>();
+		//fabrica= new FabricaEnemigosNivelUno();		
+		for(Obstaculo o : base)
+		{
+			gui.add(o.getGrafico());
+		}
+		for(Obstaculo o : borde)
+		{
+			gui.add(o.getGrafico());
+		}
+		for(Obstaculo o : obs)
+		{			
+			gui.add(o.getGrafico());
+			
+		}
+		for(Enemigo e : malos)
+		{
+			gui.add(e.getGrafico());
+			e.setJuego(this);
+			enemigosAct++;
+		}
+		gui.add(jugador.getGrafico());
+	}
+	
+	public void mover(int dir)
+	{
+		if (jugador != null)
+		{
+		PositionList<GameObject>listaColision=new ListaDoblementeEnlazada<GameObject>();
+		jugador.adelantarMovimiento(dir);
+		for(GameObject g : todo) 
+		{
+			if(jugador.getRect().intersects(g.getRect()))
+			{
+				listaColision.addLast(g);
+			}
+		}	
+		boolean moverse=true;
+		Iterator<GameObject> it = listaColision.iterator();			
+		GameObject g ;
+		while(it.hasNext() && moverse)
+		{
+			g=it.next();
+			moverse = !(g.colisionarCon(jugador.getColider())) && moverse;
+		}
+		if(moverse)
+		{
+			jugador.retrocederMovimiento(dir);
+			jugador.mover(dir);	
+		}
+		else
+		{
+			jugador.retrocederMovimiento(dir);
+		}
+		}
+	}	
+	
+	public int getEnemigosAct()
+	{
+		return  enemigosAct;
+	}
+	
+	public void setEnemigosAct(int e)
+	{
+		enemigosAct = e;
+	}
+	
+	public int getMuertes()
+	{
+		return muertes;
+	}
+	
+	public void setMuertes(int m)
+	{
+		muertes = m;
+	}
+	
+	public PositionList<Bala> getBalasJugador()
+	{
+		return balasJugador;
+	}
+	
+	public PositionList<Bala> getBalasEnemigo()
+	{
+		return balasEnemigas;
+	}
+	
+	public Jugador getJugador()
+	{
+		return jugador;
+	}
+	
+	public int getPuntaje()
+	{
+		return puntaje;
+	}
+	
+	public void setPuntaje(int pun)
+	{
+		puntaje = pun;
+	}
+	
+	public PositionList<GameObject> getTodo()
+	{
+		return todo;
+	}
+	
+	public PositionList<Enemigo> getMalos()
+	{
+		return malos;
+	}
+	
+	public PositionList<Obstaculo> getObs()
+	{
+		return obs;
+	}
+	
+	public PositionList<Obstaculo> getBorde()
+	{
+		return borde;
+	}
+	
+	public void setTodo(PositionList<GameObject> t)
+	{
+		todo = t;
+	}
+	
+	public void setMalos(PositionList<Enemigo> m)
+	{
+		malos = m;
+	}
+	
+	public void setObs(PositionList<Obstaculo> o)
+	{
+		obs = o;
+	}
+	
+	public void setBorde(PositionList<Obstaculo> o)
+	{
+		borde = o;
+	}
+	
+	public void setPulsado(boolean pul)
+	{
+		pulsado = pul;
+	}
+	
+	public void disparoEnemigo()
+	{
+		for (Enemigo o : malos)
+		{
+			if (o.getDispAct() == 0)
+			{
+				if (r.nextInt(30) < probabilidadDisparo)
+				{
+					BalaEnemigo b = o.disparar();
+					balasEnemigas.addLast(b);
+					gui.add(b.getGrafico());
+					b.getHiloEnemigo().start();
+					o.setDispAct(o.getDispAct() + 1);
+				}
+			}
+		}
+	}
+	
+	public void moverBalaJugador()
+	{	
+		if (jugador.getDisparos() < jugador.getDisparosSim())
+		{
+			BalaJugador b = jugador.disparar();
+			balasJugador.addLast(b);
+			gui.add(b.getGrafico());
+			b.getHiloJugador().start();
+			jugador.setDisparos(jugador.getDisparos() + 1);
+		}
+	}
+	
+	public void setVulnerable()
+	{
+		Nivel n = jugador.getNivel();
+		gui.remove(jugador.getGrafico());
+		jugador = new Jugador(jugador.getGolpesResi(),jugador.getVelocidadMovimiento(), jugador.getVelocidadDisparo(), jugador.getPos().x, jugador.getPos().y, 4, jugador.getVida(), jugador.getDisparosSim());
+		jugador.setJuego(this);
+		this.setJugador(jugador);
+		jugador.setNivel(n);
+		gui.add(jugador.getGrafico());
+	}
+	
+	public void insertarPowerUp()
+	{
+		int i = r.nextInt(5);
+		PowerUp estrella = new Estrella(posibilidades[i].x,posibilidades[i].y);
+		InteligenciaPowerUp ia = new InteligenciaPowerUp(this, estrella);
+		estrella.setIA(ia);
+		ia.start();
+		powers.addLast(estrella);
+		todo.addLast(estrella);
+		gui.add(estrella.getGrafico());
+	}
+	
+	public void eliminarPowerUp(PowerUp p)
+	{
+		try
+		{
+			p.getIA().cambiarVariable();
+			Position<PowerUp> puntero = powers.first();
+			boolean encontre = false;
+			for(int j=0; j < powers.size() && !encontre; j++)
+			{
+				encontre= puntero.element().equals(p);
+				if(!encontre)
+				puntero = powers.next(puntero);					
+			}	
+			if(encontre)
+			{
+				powers.remove(puntero);
+				gui.remove(puntero.element().getGrafico());
+			}
+			p = null;
+		}
+		catch (EmptyListException| InvalidPositionException | BoundaryViolationException exc)
+		{
+			exc.getMessage();
+		}
+	}
+		
+	public void borrarBalaJugador(Bala b)
+	{
+		try
+		{
+			boolean encontre= false;
+			Position<Bala> puntero = balasJugador.first();
+			for(int j=0; j < balasJugador.size() && !encontre; j++)
+			{
+				encontre= puntero.element().equals(b);
+				if(!encontre)
+				puntero = balasJugador.next(puntero);					
+			}	
+			if(encontre)
+			{
+				balasJugador.remove(puntero);
+				gui.remove(puntero.element().getGrafico());
+				jugador.setDisparos(jugador.getDisparos() - 1);
+			}
+		}
+		catch (EmptyListException| InvalidPositionException | BoundaryViolationException e)
+		{
+			e.getMessage();
+		}
+	}
+	
+	public void borrarBalaEnemigo(Bala b, Tanque t)
+	{
+		try
+		{
+			boolean encontre= false;
+			Position<Bala> puntero = balasEnemigas.first();
+			for(int j=0; j < balasEnemigas.size() && !encontre; j++)
+			{
+				encontre= puntero.element().equals(b);
+				if(!encontre)
+				puntero = balasEnemigas.next(puntero);					
+			}	
+			if(encontre)
+			{
+				t.setDispAct(t.getDispAct() - 1);
+				balasEnemigas.remove(puntero);
+				gui.remove(puntero.element().getGrafico());
+			}
+		}
+		catch (EmptyListException| InvalidPositionException | BoundaryViolationException e)
+		{
+			e.getMessage();
+		}
+	}
+	
+	public void setJugador(Jugador j)
+	{
+		jugador = j;
+		gui.add(jugador.getGrafico());
+	}
+	
+	public void mover()
+	{
+		PositionList<GameObject>listaColision=new ListaDoblementeEnlazada<GameObject>();
+		for(Enemigo o: malos)
+		{			
+			Random r = new Random();
+			dir = o.getDir();		
+			o.adelantarMovimiento(dir);
+			for(GameObject g : todo) 
+			{
+				if(o.getRect().intersects(g.getRect()))
+				{
+					if (o != g)
+					{
+						listaColision.addLast(g);
+					}
+				}
+			}
+			if (jugador!=null && o.getRect().intersects(jugador.getRect()))
+			{
+				listaColision.addLast(jugador);
+			}
+			boolean moverse=true;
+			Iterator<GameObject> it = listaColision.iterator();			
+			GameObject g ;
+			while(it.hasNext() && moverse)
+			{
+				g=it.next();
+				moverse = !(g.colisionarCon(o.getColider())) && moverse;
+			}
+			if(moverse)
+			{
+				o.retrocederMovimiento(dir);
+				o.mover(dir);
+			}
+			else
+			{
+				o.retrocederMovimiento(dir);
+				o.setDir(r.nextInt(4));
+			}		
+		}
+				
+	}
+	
+	public void meterSacarEnemigo()
+	{
+		try
+		{		
+			if (!pulsado) 
+			{
+				Enemigo T = new TanqueBasico(30,30,r.nextInt(4));
+				T.setJuego(this);
+				malos.addFirst(T);
+				gui.add(T.getGrafico());
+				pulsado=true;
+				todo.addLast(malos.first().element());
+				enemigosAct++;
+				
+			} 
+			else
+			{
+				enemigosAct--;
+				muertes++;
+				gui.remove(malos.first().element().getGrafico());
+				pulsado=false;
+				int puntajeViejo = puntaje;
+				puntaje += malos.first().element().getPuntaje();
+				int puntajeNuevo = puntaje;
+				if (puntajeViejo < 5000 && puntajeNuevo >= 5000)
+				{
+					jugador.setVida(jugador.getVida() + 1);
+				}
+				Enemigo ene =malos.first().element();
+				malos.remove(malos.first());
+				for(Position<GameObject> p: todo.positions()){
+					if (p.element()==ene)
+						try {
+							todo.remove(p);
+						} catch (InvalidPositionException e) {
+							System.out.println(e.getMessage());
+						}
+				}
+				System.out.println("Puntaje: "+puntaje);				
+			}		
+		}
+		catch(EmptyListException | InvalidPositionException  exc)
+		{
+			exc.getMessage();
+		}		
+	}
+	
+	public void eliminarObstaculo()
+	{
+	   try
+	   {
+		   if (i < obs.size())
+		   {			
+			   Obstaculo o = obs.first().element();
+			   boolean encontre= false;
+			   Position<GameObject>puntero= todo.first();
+			   for(int j=0;j<todo.size()&&!encontre;j++)
+			   {
+				   encontre=puntero.element()==o;
+				   if(!encontre)
+					   puntero=todo.next(puntero);					
+			   }	
+			   if(encontre)
+			   {
+				   obs.remove(obs.first());
+				   todo.remove(puntero);
+				   gui.remove(puntero.element().getGrafico());
+			   }			
+		   }
+	   }
+	   catch(EmptyListException| InvalidPositionException | BoundaryViolationException e)
+	   {
+		   e.getMessage();
+	   } 
+	}
+	
+	public GUI getGui()
+	{
+		return gui;
+	}
+	
+	public void GameOver()
+	{
+		gui.remove(jugador.getGrafico());
+		gui.apagarTiempo();			
+		JLabel grafico = new JLabel();
+		grafico.setIcon(new ImageIcon(this.getClass().getResource("/Recursos/Game Over.gif")));
+		grafico.setBounds(380, 200, 200, 150);
+		gui.add(grafico);
+		for (GameObject g : todo)
+		{
+			gui.remove(g.getGrafico());
+			gui.add(g.getGrafico());
+		}	
+		for (Enemigo o : malos)
+		{
+			gui.remove(o.getGrafico());
+			o = null;
+		}
+		jugador = null;
+		for (PowerUp p : powers)
+		{
+			gui.remove(p.getGrafico());
+			p = null;
+		}
+		gui.eliminarKeyListener();	
+		gui.actualizar();		
+	}
+	
+
+	public void setBase(PositionList<Obstaculo>b)
+	{
+		base=b;
+	}
+	
+	public PositionList<Obstaculo> getBase() 
+	{
+		return base;
+	}
+	
+	public void CambiarFabricaEnemigos(int i){
+		//Metodo pendiente
+		//No lo necesito Ahora! 
+		//Pajero
+	}
+}

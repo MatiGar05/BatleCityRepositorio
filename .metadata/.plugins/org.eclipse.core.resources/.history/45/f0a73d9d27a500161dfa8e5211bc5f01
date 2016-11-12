@@ -1,0 +1,54 @@
+package Fabricas;
+
+import java.awt.Point;
+import java.util.Random;
+import PowerUps.*;
+
+public class FabricaPowerUpTimer extends AbstractFactoryPowerUps
+{
+	protected Point [] posibilidades;
+	protected Random r;
+	
+	public FabricaPowerUpTimer()
+	{
+		posibilidades = new Point[5];
+		posibilidades[0]= new Point(150,400);
+		posibilidades[1]= new Point(460,350);
+		posibilidades[2]= new Point(820,400);
+		posibilidades[2]= new Point(402,220);
+		posibilidades[2]= new Point(522,220);
+		r = new Random();
+	}
+	
+	public PowerUp CrearCasco()
+	{
+		return null;
+	}
+	
+	public PowerUp CrearEstrella()
+	{
+		return null;
+	}
+	
+	public PowerUp CrearGranada()
+	{
+		return null;
+	}
+	
+	public PowerUp CrearPala()
+	{
+		return null;
+	}
+	
+	public PowerUp CrearTanqueP()
+	{
+		return null;
+	}
+	
+	public PowerUp CrearTimer()
+	{
+		int i = r.nextInt(4);
+		Point p = posibilidades[i];
+		return new Timer(p.x,p.y);
+	}
+}

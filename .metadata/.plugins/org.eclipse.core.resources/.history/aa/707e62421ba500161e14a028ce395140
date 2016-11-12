@@ -1,0 +1,132 @@
+package Visitantes;
+
+import Municion.Bala;
+import Unidades.*;
+import General.*;
+import TDALista.*;
+import Obstaculos.*;
+
+public class ColisionadorBalas extends Visitor {
+	
+	protected Bala miBala;
+	
+	public ColisionadorBalas(Bala b)
+	{
+		miBala = b;
+	}
+	
+	public boolean ColisionarParedLadrillo(ParedLadrillo p)
+	{
+		try
+		{
+			miBala.destruir();
+			miBala.getTanque().getJuego().getGui().remove(p.getGrafico());
+			miBala.getTanque().getJuego().getGui().repaint();
+			boolean encontre= false;
+			PositionList<GameObject> todo = miBala.getTanque().getJuego().getTodo();
+			PositionList<Obstaculo> obs = miBala.getTanque().getJuego().getObs();
+			Position<GameObject> puntero= todo.first();
+			Position<Obstaculo> puntero2= obs.first();
+			for(int j=0;j<todo.size()&&!encontre;j++){
+				encontre=puntero.element()==p;
+				if(!encontre)
+				puntero=todo.next(puntero);					
+			}	
+			if(encontre){
+				todo.remove(puntero);
+				miBala.getTanque().getJuego().setTodo(todo);
+			}
+			encontre = false;
+			for(int j=0;j<obs.size()&&!encontre;j++){
+				encontre=puntero2.element()==p;
+				if(!encontre)
+				puntero2=obs.next(puntero2);					
+			}	
+			if(encontre){
+				obs.remove(puntero2);
+				miBala.getTanque().getJuego().setObs(obs);
+			}
+			p = null;
+		}
+		catch (EmptyListException| InvalidPositionException | BoundaryViolationException exc)
+		{
+			System.out.println(exc.getMessage());
+		}
+		return true;
+	}
+	
+	public boolean ColisionarParedAcero(ParedAcero pa )
+	{
+		miBala.destruir();		
+		return true;
+	}
+	
+	public boolean ColisionarArbol(Arbol a)
+	{
+		return false;
+	}
+	
+	public boolean ColisionarAgua(Agua a)
+	{
+		return false;
+	}
+	
+	public boolean ColisionarAguila(Aguila a)
+	{
+		miBala.destruir();
+		return true;
+	}
+	
+	public boolean ColisionarTanqueEnemigo(Enemigo t)
+	{
+		try
+		{
+			miBala.getTanque().getJuego().getGui().remove(t.getGrafico());
+			miBala.getTanque().getJuego().getGui().repaint();
+			boolean encontre = false;
+			PositionList<GameObject> todo = miBala.getTanque().getJuego().getTodo();
+			Position<GameObject> puntero = todo.first();
+			for(int j = 0; j < todo.size() && !encontre; j++)
+			{
+				encontre = puntero.element() == t;
+				if(!encontre)
+				puntero = todo.next(puntero);					
+			}	
+			if(encontre)
+			{
+				todo.remove(puntero);
+				miBala.getTanque().getJuego().setTodo(todo);
+			}
+			encontre = false;
+			PositionList<Enemigo> malos = miBala.getTanque().getJuego().getMalos();
+			Position<Enemigo> puntero1 = malos.first();
+			for(int j = 0; j < malos.size() && !encontre; j++)
+			{
+				encontre = puntero1.element() == t;
+				if(!encontre)
+				puntero1 = malos.next(puntero1);					
+			}	
+			if(encontre)
+			{
+				malos.remove(puntero1);
+				miBala.getTanque().getJuego().setMalos(malos);
+			}
+			t = null;
+		}
+		catch (EmptyListException| InvalidPositionException | BoundaryViolationException exc)
+		{
+			System.out.println(exc.getMessage());
+		}
+		return true;
+	}
+	
+	public boolean ColisionarTanqueJugador(Jugador j){
+		return true;
+	}
+	
+	public boolean ColisionarBala(Bala t)
+	{
+		miBala.destruir();
+		return true;
+	}
+}

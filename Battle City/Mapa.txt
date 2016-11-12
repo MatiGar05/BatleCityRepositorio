@@ -1,5 +1,5 @@
 nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-ne           e            e n
+ne           e e          en
 n                              n
 n l  l  l  l  l  l  l   n
 n                              n
@@ -11,12 +11,12 @@ n l  l bl  l  l bl  l   n
 n                              n
 n                              n
 n                              n
-nb        llall         b n
+nb        lmaml         b n
 n                              n
 n l  l              l  l   n
 n                              n
-n l        lll        l   n
+n m        xxx        m   n
 n                              n
-n           lgl             n
+n           xgx             n
 n                              n
 nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn

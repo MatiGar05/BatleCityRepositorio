@@ -1,0 +1,16 @@
+package Fabricas;
+
+import Unidades.Enemigo;
+
+public class FabricaEnemigoNivelUno interface AbstractFactoryEnemigo{
+
+	public Enemigo CrearEnemigo1(){
+		return new TanqueBlindado();
+	}
+	
+	public Enemigo CrearEnemigo2();
+	
+	public Enemigo CrearEnemigo3();
+	
+	public Enemigo CrearEnemigo4();
+}
